@@ -1,0 +1,133 @@
+"Lexical Environment" : where we are writing our code.  
+                            function hello(){
+                                var a = "hello"
+                            }
+                        variable "a" sit Lexical inside the function
+
+                        when our code get syntax parse, Lexical Environment will tell where your inside variable will 
+                        store in computer memory. How it will intreact with other variable and functionsof program 
+
+"Execution Context" : When a JavaScript engine executes a script, it creates execution contexts.
+
+let x = 10;
+
+function timesTen(a){
+    return a * 10;
+}
+
+let y = timesTen(x);
+
+console.log(y); // 100
+
+
+                    Each execution context has two phases: the creation phase and the execution phase.
+                    
+                    "The creation phase:" When a script executes for the first time,
+                                        the JavaScript engine creates a Global Execution Context. 
+                                        During this creation phase, it performs the following tasks:
+                                      
+                                    1. Create a "global object" i.e., "window" in the web browser or "global" in Node.js.
+
+                                    2. Create a "this" object binding which points to the global object above.                                            
+
+                                    3. Setup a memory "heap" or "execution stcak" for storing variables and function references.
+
+                                    4. Store the function declarations in the memory heap and variables within the global 
+                                       execution context with the initial values as "undefined"
+
+
+In above code  example:
+In our example, during the creation phase, 
+the JavaScript engine stores the variables x and y and the function declaration timesTen() 
+in the "Global Execution Context".
+ Besides, it initializes the variables x and y to "undefined".
+
+                          "Global Execution Context"
+                             "Creation Phase"
+                        |   Global object : window  |
+                        |  ************************ |
+                        |    this.window            |
+                        |  ************************ |
+                        |     x: undefined          |
+                        |  ***********************  |
+                        |     timesTen: function    |
+                        |  ***********************  |
+                        |     y: undefined          |
+                        |  ***********************  |
+                        |                           |   
+                        |___________________________|                           
+                          
+
+
+
+The" execution phase :  "JavaScript engine executes the code line by line. 
+it assigns values to variables and executes the" function calls"
+
+
+For every "function call", the JavaScript engine creates a new "Function Execution Context".
+The "Function Execution Context" is similar to the Global Execution Context,
+but instead of creating the "global object", it creates the "arguments object"
+ that contains a reference to all the parameters passed into the function:
+                          
+                          "Global Execution Context"
+                            "Execution phase"
+                        |   Global object : window  |
+                        |  ************************ |
+                        |    this.window            |
+                        |  ************************ |
+                        |     x: 10                 |
+                        |  ***********************  |
+                        | timesTen: function(){..}  |
+                        |  ***********************  |
+                        |     y: timesTen(x)        |
+                        |            |              |
+                        |            |              |
+                                    \ /
+                         ___________________________|                           
+                          "FUNCTION Execution Context"
+                            "creation Phase"
+                        |   Global object : arguments|
+                        |  ************************ |
+                        |    this.window            |
+                        |  ************************ |
+                        |     a:undefined           |
+                        |  ***********************  |
+                        |                           |   
+                        |                           |   
+                        |___________________________|                           
+                          "Global Execution Context"
+
+
+During the "execution phase" of the "function execution context", 
+    it assigns 10 to the parameter a and returns the result (100) to the Global Execution Context:
+
+                          "Global Execution Context"
+                            "Execution phase"
+                        |   Global object : window  |
+                        |  ************************ |
+                        |    this.window            |
+                        |  ************************ |
+                        |     x: 10                 |
+                        |  ***********************  |
+                        | timesTen: function(){..}  |
+                        |  ***********************  |
+                        |     y: 100 
+                                    / \              |
+                        |            |              |
+                        |            |              |
+                         ___________________________|                           
+                          "FUNCTION Execution Context"
+                            "creation Phase"
+                        |   Global object : arguments|
+                        |  ************************ |
+                        |    this.window            |
+                        |  ************************ |
+                        |     a:10           |
+                        |  ***********************  |
+                        |                           |   
+                        |                           |   
+                        |___________________________|                           
+                          "Global Execution Context"
+
+To keep track of all the execution contexts, including the Global Execution Context and Function Execution Contexts,
+ the JavaScript engine uses a data structure named "call stack", 
